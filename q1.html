@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ナレッジ検索</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題1）</div>
+  <h1>社内ナレッジ検索</h1>
+  <p class="muted">キーワードを入力して、社内の記事を検索できます。</p>
+
+  <form method="get">
+    <div class="row">
+      <input type="text" name="q" placeholder="キーワードを入力" aria-label="検索キーワード">
+      <button type="submit">検索</button>
+    </div>
+  </form>
+
+  <div class="card"><div id="result">キーワードを入力してください。</div></div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+// このサイトのCookieにフラグを保存しておく（ログイン済みユーザーのセッション情報という想定）
+document.cookie = "flag=" + atob("RkxBR3t4c3NfaXNfbm90X2p1c3RfYWxlcnR9") + "; path=/; SameSite=Lax";
+
+const q = new URLSearchParams(location.search).get("q");
+if (q !== null) {
+  // 「scriptタグさえ消せば安全」という、よくある不十分な対策
+  const cleaned = q.replace(/<script/gi, "");
+  // 入力値をそのままHTMLとして埋め込んでいる（脆弱）
+  document.getElementById("result").innerHTML =
+    "「" + cleaned + "」に一致する記事は見つかりませんでした。";
+}
+</script>
+</body>
+</html>

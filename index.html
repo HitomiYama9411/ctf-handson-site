@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Web CTF ハンズオン</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Web CTF ハンズオン</h1>
+  <p class="muted">ブラウザだけで遊べる、脆弱性を探して「フラグ」を見つけるミニゲームです。</p>
+
+  <div class="card">
+    <h2>CTFとは？（30秒）</h2>
+    <p>わざと脆弱性を仕込んだ問題から、<code>FLAG{...}</code> という形式の文字列（フラグ）を見つけ出して提出する、セキュリティの学習ゲームです。</p>
+    <p>見つけたフラグは、このページの各問題の入力欄に貼り付けると正解かどうか確認できます。ブラウザの開発者ツール（F12）を使ってOKです。</p>
+    <p class="muted">⚠️ このサイトの問題は練習用です。実在のサービスに同じことを試すのは絶対にやめましょう。</p>
+  </div>
+
+  <div class="card" data-q="q1">
+    <h2>問題1：社内ナレッジ検索 <span class="badge">入門 / XSS</span></h2>
+    <p>検索した文字列が、そのまま画面に表示される検索ページです。JavaScriptを実行して、このサイトのCookieに隠されたフラグを取り出してください。</p>
+    <p><a href="q1.html" target="_blank" rel="noopener">問題1を開く →</a></p>
+    <details><summary>ヒント1</summary><p>入力した文字は、HTMLとしてそのまま解釈されているかもしれません。<code>&lt;b&gt;太字&lt;/b&gt;</code> と入力するとどうなりますか？</p></details>
+    <details><summary>ヒント2</summary><p><code>&lt;script&gt;</code> タグは対策されています。でも、JavaScriptを実行できるHTMLの書き方は他にもあります（例：画像の読み込みエラー時に動く属性）。Cookieは <code>document.cookie</code> で読めます。</p></details>
+    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
+  <div class="card" data-q="q2">
+    <h2>問題2：社員プロフィール <span class="badge">入門 / 認可の不備</span></h2>
+    <p>あなたは一般社員としてログインしています。本来は自分のプロフィールしか見られないはずです。他人のプロフィールを表示させることができれば、「メモ」欄に社外秘のフラグが書かれています。</p>
+    <p><a href="q2.html?id=101" target="_blank" rel="noopener">問題2を開く →</a></p>
+    <details><summary>ヒント1</summary><p>ブラウザのアドレスバー（URL）をよく見てみましょう。</p></details>
+    <details><summary>ヒント2</summary><p>URLの <code>id=</code> の後ろの数字を、自分のID（101）以外に変えるとどうなりますか？ 他人のデータが見えてしまったら、それが問題の穴です。</p></details>
+    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題2のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
+  <div class="card" data-q="q3">
+    <h2>問題3：社内ツールのログイン <span class="badge">ボーナス / クライアント側のみの制御</span></h2>
+    <p>時間が余った人向けです。パスワードを知らないまま、ログイン後の画面にあるフラグを手に入れてください。</p>
+    <p><a href="q3.html" target="_blank" rel="noopener">問題3を開く →</a></p>
+    <details><summary>ヒント1</summary><p>ページのソース（右クリック →「ページのソースを表示」）を読んでみましょう。ログインの判定は、どこで行われていますか？</p></details>
+    <details><summary>ヒント2</summary><p>パスワードの確認がブラウザ側のJavaScriptだけで行われています。<code>atob(...)</code> は Base64 をデコードする関数で、開発者ツールのコンソールでそのまま実行できます。</p></details>
+    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題3のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
+  <div class="card" data-q="q4">
+    <h2>問題4：社内ショップ <span class="badge">ボーナス / パラメータ改ざん</span></h2>
+    <p>グッズの購入画面です。定価は ¥1,000 ですが、定価より安い金額で注文を確定させてください。</p>
+    <p><a href="q4.html" target="_blank" rel="noopener">問題4を開く →</a></p>
+    <details><summary>ヒント1</summary><p>画面に見えない項目も、ブラウザには送信データとして入っています。開発者ツール（F12）の「Elements」でフォームを調べてみましょう。</p></details>
+    <details><summary>ヒント2</summary><p><code>type="hidden"</code> の入力項目があります。その値はダブルクリックで書き換えられます。書き換えてから「購入する」を押してみましょう。</p></details>
+    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題4のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
+  <div class="card" data-q="q5">
+    <h2>問題5：社内ポータル <span class="badge">ボーナス / 権限昇格</span></h2>
+    <p>あなたは一般ユーザーとしてポータルを見ています。管理者専用メニューを表示させ、フラグを手に入れてください。</p>
+    <p><a href="q5.html" target="_blank" rel="noopener">問題5を開く →</a></p>
+    <details><summary>ヒント1</summary><p>「現在のロール」は、どこに保存されているのでしょうか？ 開発者ツール（F12）の「Application」→「Cookies」を見てみましょう。</p></details>
+    <details><summary>ヒント2</summary><p>Cookieの <code>role</code> の値は、ブラウザ上で自分で書き換えられます。書き換えたあと、ページを再読み込みしてみましょう。</p></details>
+    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題5のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
+  <p class="muted" id="score" aria-live="polite"></p>
+</main>
+
+<script>
+// フラグのSHA-256ハッシュ（答えそのものはここに書いていません）
+const HASHES = {
+  q1: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1",
+  q2: "4f68c20f3bf5aa5abec0d32d25b619ff41ea1a18fd244e82161d80823bf4a0c4",
+  q3: "cb4aacacb4c4425d191102f54ab099ae815f8ea97229284aa31548eb40bf92a2",
+  q4: "a25055f9118e65baf4ce43bc5c16e321013c6e10157f5fd07858ee1d9f1cf411",
+  q5: "8100dc72014c74192560a6a80b3734c17d6a9fcbdfe3a47134e9db5082680f2f"
+};
+const solved = new Set();
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+document.querySelectorAll(".card[data-q]").forEach(card => {
+  const q = card.dataset.q;
+  const input = card.querySelector("input");
+  const result = card.querySelector(".result");
+  const check = async () => {
+    const value = input.value.trim();
+    if (!value) return;
+    if (await sha256(value) === HASHES[q]) {
+      result.textContent = "✅ 正解です！";
+      result.className = "result ok";
+      solved.add(q);
+    } else {
+      result.textContent = "❌ 違うようです。もう少し探してみましょう。";
+      result.className = "result ng";
+    }
+    document.getElementById("score").textContent = "正解数：" + solved.size + " / 5（問題3〜5はボーナスです）";
+  };
+  card.querySelector("button").addEventListener("click", check);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ショップ 購入画面</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題4・ボーナス）</div>
+  <h1>社内ショップ</h1>
+  <p class="muted">社員向けのグッズ販売サイトです。</p>
+
+  <div class="card" id="shop">
+    <h2>限定ステッカー</h2>
+    <p>価格：<strong>¥1,000</strong></p>
+    <form id="order">
+      <input type="hidden" name="item" value="sticker">
+      <input type="hidden" name="price" value="1000">
+      <div class="row">
+        <button type="submit">購入する</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card" id="done" hidden>
+    <h2>ご注文ありがとうございます</h2>
+    <p id="msg"></p>
+  </div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+const REGULAR_PRICE = 1000;
+
+// 本来サーバー側で行うべき注文処理を、ここでは画面上で再現している。
+// 送信された価格を、そのまま信用して請求額にしている（脆弱）
+document.getElementById("order").addEventListener("submit", e => {
+  e.preventDefault();
+  const data = new FormData(e.target);
+  const price = Number(data.get("price"));
+  let text = "請求額：¥" + price.toLocaleString("ja-JP") + " で注文を受け付けました。";
+  if (price < REGULAR_PRICE) {
+    text += " 【システム通知】定価より低い金額で注文が確定しました：" + atob("RkxBR3tuZXZlcl90cnVzdF9oaWRkZW5fZmllbGRzfQ==");
+  }
+  document.getElementById("msg").textContent = text;
+  document.getElementById("shop").hidden = true;
+  document.getElementById("done").hidden = false;
+});
+</script>
+</body>
+</html>

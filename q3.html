@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ツール ログイン</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題3・ボーナス）</div>
+  <h1>社内ツール ログイン</h1>
+
+  <div class="card" id="login">
+    <p class="muted">パスワードを入力してください。</p>
+    <form id="form">
+      <div class="row">
+        <input type="password" id="pw" placeholder="パスワード" aria-label="パスワード" autocomplete="off">
+        <button type="submit">ログイン</button>
+      </div>
+    </form>
+    <div class="result ng" id="error" aria-live="polite"></div>
+  </div>
+
+  <div class="card" id="panel" hidden>
+    <h2>管理者パネル</h2>
+    <p>ログインに成功しました。</p>
+    <p>シークレット：<code id="secret"></code></p>
+  </div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+// パスワードの確認を、ブラウザ側のJavaScriptだけで行っている（脆弱）
+const PASSWORD = atob("a2lueW91YmktbmlnaHQ=");
+
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (document.getElementById("pw").value === PASSWORD) {
+    document.getElementById("secret").textContent = atob("RkxBR3tuZXZlcl90cnVzdF90aGVfY2xpZW50fQ==");
+    document.getElementById("login").hidden = true;
+    document.getElementById("panel").hidden = false;
+  } else {
+    document.getElementById("error").textContent = "パスワードが違います。";
+  }
+});
+</script>
+</body>
+</html>

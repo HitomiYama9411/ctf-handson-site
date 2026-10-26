@@ -1,0 +1,85 @@
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1f2430;
+  --muted: #6b7280;
+  --accent: #2f6fed;
+  --border: #e3e6ec;
+  --ok: #17803d;
+  --ng: #c0392b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161b;
+    --card: #1d2027;
+    --text: #e8eaf0;
+    --muted: #9aa1b0;
+    --accent: #6c9bff;
+    --border: #2c303a;
+    --ok: #4cc27a;
+    --ng: #ff7a6b;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  line-height: 1.7;
+}
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.5rem; margin: 0 0 8px; }
+h2 { font-size: 1.15rem; margin: 0 0 8px; }
+p { margin: 0 0 12px; }
+a { color: var(--accent); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 16px 0;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.muted { color: var(--muted); font-size: 0.9rem; }
+input[type="text"], input[type="password"] {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 360px;
+}
+button {
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+.result { margin-top: 8px; font-size: 0.9rem; min-height: 1.4em; }
+.ok { color: var(--ok); font-weight: 600; }
+.ng { color: var(--ng); }
+details { margin: 6px 0; }
+summary { cursor: pointer; color: var(--muted); }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+th { width: 8em; color: var(--muted); font-weight: 500; }
+.topbar { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+.back { margin-top: 24px; font-size: 0.9rem; }
+code { background: var(--bg); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border); }

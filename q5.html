@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ポータル</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題5・ボーナス）</div>
+  <h1>社内ポータル</h1>
+  <p class="muted">ログイン中のユーザーの権限に応じて、メニューが表示されます。</p>
+
+  <div class="card">
+    <p>現在のロール：<strong id="role"></strong></p>
+    <p id="menu"></p>
+  </div>
+
+  <div class="card" id="admin" hidden>
+    <h2>管理者メニュー</h2>
+    <p>管理者専用の情報です。</p>
+    <p>シークレット：<code id="secret"></code></p>
+  </div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+function getCookie(name) {
+  const m = document.cookie.split("; ").find(c => c.startsWith(name + "="));
+  return m ? decodeURIComponent(m.split("=")[1]) : null;
+}
+
+// 初回アクセス時は、一般ユーザーとしてロールをCookieに保存する
+if (!getCookie("role")) {
+  document.cookie = "role=user; path=/; SameSite=Lax";
+}
+
+// Cookieの値だけでロールを判断している（脆弱）
+const role = getCookie("role");
+document.getElementById("role").textContent = role;
+
+if (role === "admin") {
+  document.getElementById("menu").textContent = "管理者として、管理者メニューを利用できます。";
+  document.getElementById("secret").textContent = atob("RkxBR3tjb29raWVfaXNfdXNlcl9jb250cm9sbGVkfQ==");
+  document.getElementById("admin").hidden = false;
+} else {
+  document.getElementById("menu").textContent = "一般ユーザーのため、管理者メニューは表示されません。";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社員プロフィール</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題2）｜ログイン中：田中 花子（ID: 101）</div>
+  <h1>社員プロフィール</h1>
+  <p class="muted">一般社員は、自分のプロフィールだけを閲覧できる仕様です。</p>
+  <p><a href="q2.html?id=101">マイプロフィールを表示</a></p>
+
+  <div class="card" id="profile"></div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+const ME = "101";
+const SECRET = atob("RkxBR3tpZG9yX2NoZWNrX2F1dGhvcml6YXRpb259");
+
+// サーバーから返ってくるデータ、という想定
+const KNOWN = {
+  "1":   { name: "管理者（admin）", dept: "情報システム部", email: "admin@example.test" },
+  "101": { name: "田中 花子", dept: "営業部", email: "hanako@example.test" },
+  "102": { name: "佐藤 次郎", dept: "開発部", email: "jiro@example.test" },
+  "103": { name: "鈴木 美咲", dept: "人事部", email: "misaki@example.test" }
+};
+
+function getProfile(id) {
+  const base = KNOWN[id] || { name: "社員（ID: " + id + "）", dept: "—", email: "user" + id + "@example.test" };
+  // 自分以外のメモには社外秘の情報（フラグ）が入っている
+  const memo = id === ME ? "来週の勉強会が楽しみです。" : "【社外秘】" + SECRET;
+  return { ...base, memo };
+}
+
+const id = new URLSearchParams(location.search).get("id") || ME;
+const box = document.getElementById("profile");
+
+if (/^\d+$/.test(id)) {
+  // ログイン中のユーザー(101)本人かどうかを確認せず、指定されたIDのデータをそのまま返している（脆弱）
+  const user = getProfile(id);
+  const rows = [["ID", id], ["名前", user.name], ["部署", user.dept], ["メール", user.email], ["メモ", user.memo]];
+  const table = document.createElement("table");
+  rows.forEach(([k, v]) => {
+    const tr = table.insertRow();
+    const th = document.createElement("th"); th.textContent = k;
+    const td = document.createElement("td"); td.textContent = v;
+    tr.append(th, td);
+  });
+  box.append(table);
+} else {
+  box.textContent = "ユーザーが見つかりません。";
+}
+</script>
+</body>
+</html>
