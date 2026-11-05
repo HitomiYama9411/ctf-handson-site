@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内システム ログイン</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題6・ボーナス）</div>
+  <h1>社内システム ログイン</h1>
+  <p class="muted">お試し用アカウント：ID <code>guest</code> ／ パスワード <code>guest</code></p>
+
+  <div class="card">
+    <form id="form">
+      <div class="row"><input type="text" id="uid" placeholder="ID" aria-label="ID" autocomplete="off"></div>
+      <div class="row"><input type="text" id="pw" placeholder="パスワード" aria-label="パスワード" autocomplete="off"></div>
+      <div class="row"><button type="submit">ログイン</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <p class="muted">開発中のためデバッグ表示中：実行されたSQL</p>
+    <pre id="sql">（まだ実行されていません）</pre>
+    <div class="result" id="msg" aria-live="polite"></div>
+  </div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+// ---------------------------------------------------------------
+// サーバー側のログイン処理を、ブラウザ上で再現しているページです。
+// 本物のデータベースはありません。SQLのごく一部（=, AND, OR, --, #）
+// だけを解釈する、小さな仕組みで動いています。
+// ---------------------------------------------------------------
+
+// users テーブル（パスワードはハッシュで保存している想定）
+const USERS = [
+  { id: "admin", name: "管理者",       pwHash: "2a5ad0c32aaa64466badfc879e6beef9837e52a42db322ba0f05b2bdd7e52495" },
+  { id: "guest", name: "ゲストユーザー", pwHash: "84983c60f7daadc1cb8698621f802c0d9f9a3c3c295c810748fb048115c186ec" }
+];
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// SQL文を単語に分ける（文字列リテラル、記号、キーワードなど）
+function tokenize(sql) {
+  const tokens = [];
+  let i = 0;
+  while (i < sql.length) {
+    const c = sql[i];
+    if (/\s/.test(c)) { i++; continue; }
+    if (c === "-" && sql[i + 1] === "-") break;   // -- 以降はコメント
+    if (c === "#") break;                          // # 以降もコメント（MySQL）
+    if (c === "'") {
+      let s = "";
+      i++;
+      while (true) {
+        if (i >= sql.length) throw new Error("文字列が閉じられていません（' の数が合いません）");
+        if (sql[i] === "'" && sql[i + 1] === "'") { s += "'"; i += 2; continue; }
+        if (sql[i] === "'") { i++; break; }
+        s += sql[i++];
+      }
+      tokens.push({ type: "str", value: s });
+      continue;
+    }
+    if (c === "<" && sql[i + 1] === ">") { tokens.push({ type: "op", value: "!=" }); i += 2; continue; }
+    if (c === "!" && sql[i + 1] === "=") { tokens.push({ type: "op", value: "!=" }); i += 2; continue; }
+    if ("=();".includes(c)) { tokens.push({ type: "op", value: c }); i++; continue; }
+    const m = /^[A-Za-z0-9_]+/.exec(sql.slice(i));
+    if (m) {
+      const w = m[0];
+      const up = w.toUpperCase();
+      if (up === "AND" || up === "OR") tokens.push({ type: "kw", value: up });
+      else if (/^\d+$/.test(w)) tokens.push({ type: "str", value: w });
+      else tokens.push({ type: "col", value: w.toLowerCase() });
+      i += w.length;
+      continue;
+    }
+    throw new Error("構文エラー：「" + c + "」付近");
+  }
+  return tokens;
+}
+
+// WHERE句を「行ごとに true / false を返す関数」に変換する（OR より AND が先）
+function parseWhere(tokens) {
+  let p = 0;
+  const peek = () => tokens[p];
+  const next = () => tokens[p++];
+  const isOp = (t, v) => t && t.type === "op" && t.value === v;
+
+  function operand() {
+    const t = next();
+    if (!t) throw new Error("構文エラー：式が途中で終わっています");
+    if (t.type === "str") return { lit: t.value };
+    if (t.type === "col") {
+      if (t.value !== "id" && t.value !== "pw") throw new Error("不明な列名：" + t.value);
+      return { col: t.value };
+    }
+    throw new Error("構文エラー：「" + t.value + "」付近");
+  }
+  function comparison() {
+    if (isOp(peek(), "(")) {
+      next();
+      const e = orExpr();
+      if (!isOp(next(), ")")) throw new Error("構文エラー：かっこが閉じられていません");
+      return e;
+    }
+    const left = operand();
+    const t = peek();
+    if (isOp(t, "=") || isOp(t, "!=")) {
+      next();
+      const right = operand();
+      const neg = t.value === "!=";
+      return ctx => (ctx.val(left) === ctx.val(right)) !== neg;
+    }
+    return ctx => ctx.truthy(left);
+  }
+  function andExpr() {
+    let e = comparison();
+    while (peek() && peek().type === "kw" && peek().value === "AND") {
+      next();
+      const l = e, r = comparison();
+      e = ctx => l(ctx) && r(ctx);
+    }
+    return e;
+  }
+  function orExpr() {
+    let e = andExpr();
+    while (peek() && peek().type === "kw" && peek().value === "OR") {
+      next();
+      const l = e, r = andExpr();
+      e = ctx => l(ctx) || r(ctx);
+    }
+    return e;
+  }
+
+  const expr = orExpr();
+  if (isOp(peek(), ";")) next();
+  if (p < tokens.length) throw new Error("構文エラー：「" + peek().value + "」付近");
+  return expr;
+}
+
+async function runQuery(where) {
+  const tokens = tokenize(where);
+  const expr = parseWhere(tokens);
+
+  // 値の比較はすべてハッシュ同士で行う（pw列は元の文字列を持っていないため）
+  const litHash = {};
+  for (const t of tokens) if (t.type === "str") litHash[t.value] = await sha256(t.value);
+  const rows = [];
+  for (const u of USERS) {
+    const idHash = await sha256(u.id);
+    const ctx = {
+      val: x => x.col === "id" ? idHash : x.col === "pw" ? u.pwHash : litHash[x.lit],
+      truthy: x => x.col ? true : (x.lit !== "" && x.lit !== "0")
+    };
+    if (expr(ctx)) rows.push(u);
+  }
+  return rows;
+}
+
+document.getElementById("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const uid = document.getElementById("uid").value;
+  const pw = document.getElementById("pw").value;
+  const msg = document.getElementById("msg");
+
+  // 入力値を、そのまま文字列としてつなげてSQL文を作っている（脆弱）
+  const where = "id='" + uid + "' AND pw='" + pw + "';";
+  document.getElementById("sql").textContent = "SELECT * FROM users WHERE " + where;
+
+  try {
+    const rows = await runQuery(where);
+    if (rows.length === 0) {
+      msg.className = "result ng";
+      msg.textContent = "IDまたはパスワードが違います。";
+      return;
+    }
+    // 見つかった最初の行のユーザーとしてログインする
+    const user = rows[0];
+    msg.className = "result ok";
+    if (user.id === "admin") {
+      msg.textContent = "ようこそ、" + user.name + "さん。管理者用シークレット：" + atob("RkxBR3tzcWxpX2lucHV0X2JlY2FtZV9jb2RlfQ==");
+    } else {
+      msg.textContent = "ようこそ、" + user.name + "さん。（一般ユーザーのため、管理者用の情報は表示されません）";
+    }
+  } catch (err) {
+    msg.className = "result ng";
+    msg.textContent = "データベースエラー：" + err.message;
+  }
+});
+</script>
+</body>
+</html>
