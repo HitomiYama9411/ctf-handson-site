@@ -20,11 +20,11 @@
   </div>
 
   <div class="card" data-q="q1">
-    <h2>問題1：社内ナレッジ検索 <span class="badge">入門 / XSS</span></h2>
-    <p>検索した文字列が、そのまま画面に表示される検索ページです。JavaScriptを実行して、このサイトのCookieに隠されたフラグを取り出してください。</p>
+    <h2>問題1：社内つぶやき <span class="badge">入門 / XSS</span></h2>
+    <p>社員みんなが見るタイムラインに投稿できる、社内SNSです。あなたの投稿を見た人の画面で、JavaScript（<code>alert</code>）を動かしてください。動かせたら、画面にフラグが表示されます。</p>
     <p><a href="q1.html" target="_blank" rel="noopener">問題1を開く →</a></p>
-    <details><summary>ヒント1</summary><p>入力した文字は、HTMLとしてそのまま解釈されているかもしれません。<code>&lt;b&gt;太字&lt;/b&gt;</code> と入力するとどうなりますか？</p></details>
-    <details><summary>ヒント2</summary><p><code>&lt;script&gt;</code> タグは対策されています。でも、JavaScriptを実行できるHTMLの書き方は他にもあります（例：画像の読み込みエラー時に動く属性）。Cookieは <code>document.cookie</code> で読めます。</p></details>
+    <details><summary>ヒント1</summary><p>投稿した文字は、ただの文字としてではなく、HTMLとして表示されているかもしれません。<code>&lt;b&gt;太字&lt;/b&gt;</code> と投稿するとどうなりますか？</p></details>
+    <details><summary>ヒント2</summary><p>HTMLの中でJavaScriptを書くときは、<code>&lt;script&gt;</code> タグを使います。<code>&lt;script&gt;alert(1)&lt;/script&gt;</code> と投稿してみましょう。</p></details>
     <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
