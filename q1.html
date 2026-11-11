@@ -11,9 +11,23 @@
 <main>
   <div class="topbar">練習用ページ（問題1）｜ログイン中：田中 花子</div>
   <h1>社内つぶやき</h1>
-  <p class="muted">社員みんなのタイムラインです。投稿は全社員の画面に表示されます。</p>
+  <p class="muted">社員みんなのタイムラインです。投稿とプロフィールは、全社員の画面に表示されます。</p>
 
   <div class="card">
+    <h2>あなたのプロフィール</h2>
+    <form id="profile">
+      <p>名前：田中 花子</p>
+      <label for="site">Webサイト（名前のリンク先になります）</label>
+      <div class="row">
+        <input type="text" id="site" placeholder="https://example.com" autocomplete="off">
+        <button type="submit">保存</button>
+      </div>
+    </form>
+    <div class="result" id="saved" aria-live="polite"></div>
+  </div>
+
+  <div class="card">
+    <h2>投稿する</h2>
     <form id="form">
       <div class="row">
         <input type="text" id="msg" placeholder="いまどうしてる？" aria-label="投稿する内容" autocomplete="off">
@@ -38,44 +52,68 @@
 const dir = location.pathname.replace(/[^/]*$/, "");
 document.cookie = "session=tanaka-7f3a9c21e8; path=" + dir + "; SameSite=Lax";
 
-const timeline = document.getElementById("timeline");
-let lastPost = "";
+// サーバーに保存されている、という想定のデータ
+const profiles = {
+  "佐藤 次郎": "https://example.com/",
+  "鈴木 美咲": "",
+  "田中 花子": ""
+};
+const posts = [
+  { name: "鈴木 美咲", text: "来週のCTF勉強会、楽しみです！" },
+  { name: "佐藤 次郎", text: "今日のランチ、新しくできたカレー屋さんに行ってきました🍛" },
+  { name: "田中 花子", text: "営業部の田中です。社内つぶやき、はじめてみました！" }
+];
 
-// 投稿をタイムラインに表示する
-function addPost(name, text) {
-  const li = document.createElement("li");
-  const who = document.createElement("strong");
-  who.textContent = name;
-  const body = document.createElement("div");
-  // 投稿の中身を、HTMLとしてそのまま埋め込んでいる（脆弱）
-  body.append(document.createRange().createContextualFragment(text));
-  li.append(who, body);
-  timeline.prepend(li);
+function render() {
+  const timeline = document.getElementById("timeline");
+  timeline.replaceChildren();
+  posts.forEach(p => {
+    const li = document.createElement("li");
+
+    // 名前：Webサイトが登録されていればリンクにする
+    // （登録されたURLを、確認せずにそのままリンク先にしている：脆弱）
+    const site = profiles[p.name];
+    const who = document.createElement(site ? "a" : "strong");
+    who.textContent = p.name;
+    if (site) who.href = site;
+
+    // 本文：textContent で「ただの文字」として表示している（こちらは対策済み）
+    const body = document.createElement("div");
+    body.textContent = p.text;
+
+    li.append(who, body);
+    timeline.append(li);
+  });
 }
+render();
 
-// 他の社員の投稿（サーバーに保存されている、という想定）
-addPost("佐藤 次郎", "今日のランチ、新しくできたカレー屋さんに行ってきました🍛");
-addPost("鈴木 美咲", "来週のCTF勉強会、楽しみです！");
-
-// 投稿を見た人の画面で alert が動いたら「XSS成功」とみなす（練習用の仕組み）
+// 名前のリンクから JavaScript が動いたら「XSS成功」とみなす（練習用の仕組み）
 const originalAlert = window.alert.bind(window);
 window.alert = function (message) {
-  if (lastPost.includes("<")) {
+  const site = profiles["田中 花子"].replace(/[\s\x00-\x1f]/g, "").toLowerCase();
+  if (site.startsWith("javascript:")) {
     const box = document.getElementById("clear");
-    box.textContent = "🎉 XSS成功！ あなたの投稿で、見た人の画面のJavaScriptが動きました。フラグ：" +
+    box.textContent = "🎉 XSS成功！ あなたの名前のリンクを開いた人の画面で、JavaScriptが動きました。フラグ：" +
       atob("RkxBR3t4c3NfaXNfbm90X2p1c3RfYWxlcnR9");
     box.hidden = false;
   }
   return originalAlert(message);
 };
 
+document.getElementById("profile").addEventListener("submit", e => {
+  e.preventDefault();
+  profiles["田中 花子"] = document.getElementById("site").value.trim();
+  document.getElementById("saved").textContent = "保存しました。";
+  render();
+});
+
 document.getElementById("form").addEventListener("submit", e => {
   e.preventDefault();
   const input = document.getElementById("msg");
   if (!input.value.trim()) return;
-  lastPost = input.value;
-  addPost("田中 花子（あなた）", input.value);
+  posts.unshift({ name: "田中 花子", text: input.value });
   input.value = "";
+  render();
 });
 </script>
 </body>
