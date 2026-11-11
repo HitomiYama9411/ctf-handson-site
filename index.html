@@ -21,10 +21,10 @@
 
   <div class="card" data-q="q1">
     <h2>問題1：社内つぶやき <span class="badge">入門 / XSS</span></h2>
-    <p>社員みんなが見るタイムラインに投稿できる、社内SNSです。投稿やプロフィールは、他の社員の画面にも表示されます。あなたの情報を見た人の画面で、JavaScript（<code>alert</code>）を動かしてください。動かせたら、画面にフラグが表示されます。</p>
+    <p>社員みんなが見るタイムラインに投稿できる、社内SNSです。投稿は他の社員の画面にも表示されます。あなたの投稿を見た人の画面で、JavaScript（<code>alert</code>）を動かしてください。動かせたら、画面にフラグが表示されます。</p>
     <p><a href="q1.html" target="_blank" rel="noopener">問題1を開く →</a></p>
-    <details><summary>ヒント1</summary><p>投稿の本文は、きちんと対策されているようです（<code>&lt;script&gt;</code> を投稿しても、文字のまま表示されます）。投稿のほかに、あなたが入力できる場所はありませんか？ 入力した内容が画面のどこにどう使われているか、開発者ツール（F12）の「要素」タブで見てみましょう。</p></details>
-    <details><summary>ヒント2</summary><p>リンク（<code>&lt;a href="..."&gt;</code>）の行き先には、<code>https://</code> だけでなく <code>javascript:</code> で始まる値も書けます。この場合、リンクをクリックすると後ろのJavaScriptが実行されます。Webサイト欄に <code>javascript:alert(1)</code> と保存して、タイムラインの自分の名前をクリックしてみましょう。</p></details>
+    <details><summary>ヒント1</summary><p>まずは <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> と投稿してみましょう。タイムラインには何が残りましたか？ 何が消されたのでしょうか。</p></details>
+    <details><summary>ヒント2</summary><p>このサイトは、小文字の <code>&lt;script&gt;</code> という文字だけを探して消しています。でも、HTMLのタグは大文字で書いても同じ意味になります。<code>&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;</code> と投稿するとどうなるでしょうか？</p></details>
     <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
