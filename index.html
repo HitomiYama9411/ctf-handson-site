@@ -40,21 +40,21 @@
   </div>
 
   <div class="card" data-q="q3">
-    <h2>問題3：社内ツールのログイン <span class="badge">ボーナス / クライアント側のみの制御</span></h2>
-    <p>時間が余った人向けです。パスワードを知らないまま、ログイン後の画面にあるフラグを手に入れてください。</p>
+    <h2>問題3：社内ショップ <span class="badge">入門 / パラメータ改ざん</span></h2>
+    <p>グッズの購入画面です。定価は ¥1,000 ですが、定価より安い金額で注文を確定させてください。</p>
     <p><a href="q3.html" target="_blank" rel="noopener">問題3を開く →</a></p>
-    <details><summary>ヒント1</summary><p>ページのソース（右クリック →「ページのソースを表示」）を読んでみましょう。ログインの判定は、どこで行われていますか？</p></details>
-    <details><summary>ヒント2</summary><p>パスワードの確認がブラウザ側のJavaScriptだけで行われています。<code>atob(...)</code> は Base64 をデコードする関数で、開発者ツールのコンソールでそのまま実行できます。</p></details>
+    <details><summary>ヒント1</summary><p>画面に見えない項目も、ブラウザには送信データとして入っています。開発者ツール（F12）の「Elements」でフォームを調べてみましょう。</p></details>
+    <details><summary>ヒント2</summary><p><code>type="hidden"</code> の入力項目があります。その値はダブルクリックで書き換えられます。書き換えてから「購入する」を押してみましょう。</p></details>
     <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題3のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
   <div class="card" data-q="q4">
-    <h2>問題4：社内ショップ <span class="badge">ボーナス / パラメータ改ざん</span></h2>
-    <p>グッズの購入画面です。定価は ¥1,000 ですが、定価より安い金額で注文を確定させてください。</p>
+    <h2>問題4：社内ツールのログイン <span class="badge">ボーナス / クライアント側のみの制御</span></h2>
+    <p>時間が余った人向けです。パスワードを知らないまま、ログイン後の画面にあるフラグを手に入れてください。</p>
     <p><a href="q4.html" target="_blank" rel="noopener">問題4を開く →</a></p>
-    <details><summary>ヒント1</summary><p>画面に見えない項目も、ブラウザには送信データとして入っています。開発者ツール（F12）の「Elements」でフォームを調べてみましょう。</p></details>
-    <details><summary>ヒント2</summary><p><code>type="hidden"</code> の入力項目があります。その値はダブルクリックで書き換えられます。書き換えてから「購入する」を押してみましょう。</p></details>
+    <details><summary>ヒント1</summary><p>ページのソース（右クリック →「ページのソースを表示」）を読んでみましょう。ログインの判定は、どこで行われていますか？</p></details>
+    <details><summary>ヒント2</summary><p>パスワードの確認がブラウザ側のJavaScriptだけで行われています。<code>atob(...)</code> は Base64 をデコードする関数で、開発者ツールのコンソールでそのまま実行できます。</p></details>
     <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題4のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
@@ -97,8 +97,8 @@
 const HASHES = {
   q1: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1",
   q2: "4f68c20f3bf5aa5abec0d32d25b619ff41ea1a18fd244e82161d80823bf4a0c4",
-  q3: "cb4aacacb4c4425d191102f54ab099ae815f8ea97229284aa31548eb40bf92a2",
-  q4: "a25055f9118e65baf4ce43bc5c16e321013c6e10157f5fd07858ee1d9f1cf411",
+  q3: "a25055f9118e65baf4ce43bc5c16e321013c6e10157f5fd07858ee1d9f1cf411",
+  q4: "cb4aacacb4c4425d191102f54ab099ae815f8ea97229284aa31548eb40bf92a2",
   q5: "8100dc72014c74192560a6a80b3734c17d6a9fcbdfe3a47134e9db5082680f2f",
   q6: "704861c099c2d3eb92d60e5a956286bfa74d0f9bb892439f541e4e0abcc93b83",
   q7: "296c0e98abc1559d18c495df46f1ddfdf1f7df73185b8f9fa891355a2763d603"
@@ -125,7 +125,7 @@ document.querySelectorAll(".card[data-q]").forEach(card => {
       result.textContent = "❌ 違うようです。もう少し探してみましょう。";
       result.className = "result ng";
     }
-    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題3〜7はボーナスです）";
+    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜7はボーナスです）";
   };
   card.querySelector("button").addEventListener("click", check);
   input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });

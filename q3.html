@@ -4,47 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>社内ツール ログイン</title>
+<title>社内ショップ 購入画面</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <div class="topbar">練習用ページ（問題3・ボーナス）</div>
-  <h1>社内ツール ログイン</h1>
+  <div class="topbar">練習用ページ（問題3）</div>
+  <h1>社内ショップ</h1>
+  <p class="muted">社員向けのグッズ販売サイトです。</p>
 
-  <div class="card" id="login">
-    <p class="muted">パスワードを入力してください。</p>
-    <form id="form">
+  <div class="card" id="shop">
+    <h2>限定ステッカー</h2>
+    <p>価格：<strong>¥1,000</strong></p>
+    <form id="order">
+      <input type="hidden" name="item" value="sticker">
+      <input type="hidden" name="price" value="1000">
       <div class="row">
-        <input type="password" id="pw" placeholder="パスワード" aria-label="パスワード" autocomplete="off">
-        <button type="submit">ログイン</button>
+        <button type="submit">購入する</button>
       </div>
     </form>
-    <div class="result ng" id="error" aria-live="polite"></div>
   </div>
 
-  <div class="card" id="panel" hidden>
-    <h2>管理者パネル</h2>
-    <p>ログインに成功しました。</p>
-    <p>シークレット：<code id="secret"></code></p>
+  <div class="card" id="done" hidden>
+    <h2>ご注文ありがとうございます</h2>
+    <p id="msg"></p>
   </div>
 
   <p class="back"><a href="index.html">← トップに戻る</a></p>
 </main>
 
 <script>
-// パスワードの確認を、ブラウザ側のJavaScriptだけで行っている（脆弱）
-const PASSWORD = atob("a2lueW91YmktbmlnaHQ=");
+const REGULAR_PRICE = 1000;
 
-document.getElementById("form").addEventListener("submit", e => {
+// 本来サーバー側で行うべき注文処理を、ここでは画面上で再現している。
+// 送信された価格を、そのまま信用して請求額にしている（脆弱）
+document.getElementById("order").addEventListener("submit", e => {
   e.preventDefault();
-  if (document.getElementById("pw").value === PASSWORD) {
-    document.getElementById("secret").textContent = atob("RkxBR3tuZXZlcl90cnVzdF90aGVfY2xpZW50fQ==");
-    document.getElementById("login").hidden = true;
-    document.getElementById("panel").hidden = false;
-  } else {
-    document.getElementById("error").textContent = "パスワードが違います。";
+  const data = new FormData(e.target);
+  const price = Number(data.get("price"));
+  let text = "請求額：¥" + price.toLocaleString("ja-JP") + " で注文を受け付けました。";
+  if (price < REGULAR_PRICE) {
+    text += " 【システム通知】定価より低い金額で注文が確定しました：" + atob("RkxBR3tuZXZlcl90cnVzdF9oaWRkZW5fZmllbGRzfQ==");
   }
+  document.getElementById("msg").textContent = text;
+  document.getElementById("shop").hidden = true;
+  document.getElementById("done").hidden = false;
 });
 </script>
 </body>
