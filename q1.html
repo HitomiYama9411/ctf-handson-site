@@ -4,39 +4,102 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>社内ナレッジ検索</title>
+<title>社内ブログ</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
   <div class="topbar">練習用ページ（問題1）</div>
-  <h1>社内ナレッジ検索</h1>
-  <p class="muted">キーワードを入力して、社内の記事を検索できます。</p>
+  <h1>社内ブログ</h1>
 
-  <form method="get">
-    <div class="row">
-      <input type="text" name="q" placeholder="キーワードを入力" aria-label="検索キーワード">
-      <button type="submit">検索</button>
-    </div>
-  </form>
+  <article class="card">
+    <p class="muted">2026年11月　情報システム部 佐藤</p>
+    <h2>パスワード、使い回していませんか？</h2>
+    <p>社内のアカウントと、プライベートのサービスで同じパスワードを使っていると、どこか1つから漏れたときに、まとめて乗っ取られてしまいます。</p>
+    <p>パスワード管理ツールを使って、サービスごとに違うパスワードを設定しましょう。感想や、おすすめのツールがあれば、コメント欄で教えてください。</p>
+  </article>
 
-  <div class="card"><div id="result">キーワードを入力してください。</div></div>
+  <section class="card">
+    <h2>コメント</h2>
+    <ul class="comments" id="comments"></ul>
+
+    <form id="form">
+      <div class="row"><input type="text" id="name" placeholder="名前" aria-label="名前" autocomplete="off"></div>
+      <div class="row"><input type="text" id="body" placeholder="コメントを書く" aria-label="コメント" autocomplete="off"></div>
+      <div class="row">
+        <button type="submit">コメントする</button>
+        <button type="button" id="reset" class="secondary">コメントをリセット</button>
+      </div>
+    </form>
+    <p class="muted">※ コメントは、このブラウザの中だけに保存されます（他の参加者には見えません）。表示がおかしくなったら「コメントをリセット」を押してください。</p>
+  </section>
 
   <p class="back"><a href="index.html">← トップに戻る</a></p>
 </main>
 
 <script>
-// このサイトのCookieにフラグを保存しておく（ログイン済みユーザーのセッション情報という想定）
-document.cookie = "flag=" + atob("RkxBR3t4c3NfaXNfbm90X2p1c3RfYWxlcnR9") + "; path=/; SameSite=Lax";
+// ログイン中のユーザーのCookie（セッション情報という想定）にフラグを入れておく
+const dir = location.pathname.replace(/[^/]*$/, "");
+document.cookie = "flag=" + atob("RkxBR3t4c3NfaXNfbm90X2p1c3RfYWxlcnR9") + "; path=" + dir + "; SameSite=Lax";
 
-const q = new URLSearchParams(location.search).get("q");
-if (q !== null) {
-  // 「scriptタグさえ消せば安全」という、よくある不十分な対策
-  const cleaned = q.replace(/<script/gi, "");
-  // 入力値をそのままHTMLとして埋め込んでいる（脆弱）
-  document.getElementById("result").innerHTML =
-    "「" + cleaned + "」に一致する記事は見つかりませんでした。";
+// サーバーの代わりに、このブラウザの localStorage にコメントを保存する
+const KEY = "ctf-q1-comments";
+const INITIAL = [
+  { name: "鈴木 美咲", body: "パスワード管理ツール、先月から使い始めました。もっと早く使えばよかったです。" },
+  { name: "佐藤 次郎", body: "同じパスワードを使い回していたので、今日中に変えます…！" },
+  { name: "田中 花子", body: "社内でおすすめのツールがあれば知りたいです。" }
+];
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    if (Array.isArray(saved)) return saved;
+  } catch (e) { /* 読めないときは初期状態 */ }
+  return INITIAL.slice();
 }
+function save(list) {
+  try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { /* 保存できない環境では、画面上だけで保持する */ }
+}
+let comments = load();
+
+// 「<script さえ消せば安全」という、よくある不十分な対策
+function sanitize(text) {
+  return text.replace(/<script/gi, "");
+}
+
+function render() {
+  const ul = document.getElementById("comments");
+  ul.replaceChildren();
+  for (const c of comments) {
+    const li = document.createElement("li");
+    const who = document.createElement("strong");
+    who.textContent = c.name || "名無し";
+    const body = document.createElement("div");
+    // コメント本文を、HTMLとしてそのまま埋め込んでいる（脆弱）
+    body.innerHTML = sanitize(c.body);
+    li.append(who, body);
+    ul.append(li);
+  }
+}
+
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const body = document.getElementById("body").value;
+  if (!body.trim()) return;
+  comments.push({ name, body });
+  save(comments);
+  document.getElementById("body").value = "";
+  render();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  try { localStorage.removeItem(KEY); } catch (e) { /* 何もしない */ }
+  comments = INITIAL.slice();
+  render();
+});
+
+render();
 </script>
 </body>
 </html>

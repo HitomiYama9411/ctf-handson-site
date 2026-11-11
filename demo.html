@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ブログ（デモ）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">デモ用ページ（講師が画面共有で使います）</div>
+  <h1>社内ブログ</h1>
+
+  <article class="card">
+    <p class="muted">2026年11月　広報部 鈴木</p>
+    <h2>社内勉強会を開催します</h2>
+    <p>今月の社内勉強会のテーマは「Web CTF ハンズオン」です。ブラウザだけで参加できます。</p>
+    <p>参加される方は、コメント欄にひとことお願いします。</p>
+  </article>
+
+  <section class="card">
+    <h2>コメント</h2>
+    <ul class="comments" id="comments"></ul>
+
+    <form id="form">
+      <div class="row"><input type="text" id="name" placeholder="名前" aria-label="名前" autocomplete="off"></div>
+      <div class="row"><input type="text" id="body" placeholder="コメントを書く" aria-label="コメント" autocomplete="off"></div>
+      <div class="row">
+        <button type="submit">コメントする</button>
+        <button type="button" id="reset" class="secondary">コメントをリセット</button>
+      </div>
+    </form>
+    <p class="muted">※ コメントは、このブラウザの中だけに保存されます。表示がおかしくなったら「コメントをリセット」を押してください。</p>
+  </section>
+</main>
+
+<script>
+// デモ用：対策なし。コメント本文を、HTMLとしてそのまま表示する（scriptタグも動く）
+// ※ Cookieの設定や、外部への送信処理はありません
+const KEY = "ctf-demo-comments";
+const INITIAL = [
+  { name: "佐藤 次郎", body: "参加します！" },
+  { name: "田中 花子", body: "初めてのCTF、楽しみです。" }
+];
+
+function load() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    if (Array.isArray(saved)) return saved;
+  } catch (e) { /* 読めないときは初期状態 */ }
+  return INITIAL.slice();
+}
+function save(list) {
+  try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { /* 画面上だけで保持する */ }
+}
+let comments = load();
+
+function render() {
+  const ul = document.getElementById("comments");
+  ul.replaceChildren();
+  for (const c of comments) {
+    const li = document.createElement("li");
+    const who = document.createElement("strong");
+    who.textContent = c.name || "名無し";
+    const body = document.createElement("div");
+    // 本文をHTMLとして埋め込む（脆弱）。createContextualFragment は、中の scriptタグも実行する
+    body.append(document.createRange().createContextualFragment(c.body));
+    li.append(who, body);
+    ul.append(li);
+  }
+}
+
+document.getElementById("form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const body = document.getElementById("body").value;
+  if (!body.trim()) return;
+  comments.push({ name, body });
+  save(comments);
+  document.getElementById("body").value = "";
+  render();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  try { localStorage.removeItem(KEY); } catch (e) { /* 何もしない */ }
+  comments = INITIAL.slice();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
