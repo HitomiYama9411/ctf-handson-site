@@ -24,8 +24,8 @@
     <p>社内ブログの記事に、コメントを書き込めます。書いたコメントは、記事を見た人全員の画面に表示されます。JavaScriptを実行して、このサイトのCookieに隠されたフラグを取り出してください。</p>
     <p><a href="q1.html" target="_blank" rel="noopener">問題1を開く →</a></p>
     <details><summary>ヒント1</summary><p>コメントの文字は、HTMLとしてそのまま表示されているかもしれません。<code>&lt;b&gt;こんにちは&lt;/b&gt;</code> とコメントするとどうなりますか？</p></details>
-    <details><summary>ヒント2</summary><p><code>&lt;script</code> は対策されています（消されます）。でも、JavaScriptを実行できるHTMLの書き方は、ほかにもあります（例：画像の読み込みエラー時に動く属性）。Cookieは <code>document.cookie</code> で読めます。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
+    <details class="hint2-locked" data-q="q1" data-hint2="/QuDEE9V3uCwJVaObm8UiQ==.m+3Se6CybRRSf9VI.d8IsyK/Aqy5kVztaeZ/cQbBxH+oUmRKDVSiEMo7pUUHH1c4eQrM2azv59L36fn9tHSkR+szLPN4PJgbPkE5+jdjqShSqRbn9hIgiE8RHJqFxZWe7CeZ3snTtSmlUi2DRMLcEBspfVjIrUdff0Ee9mb8Hahzm8uHIp07LyYNMi3zCAfba0Od4f9HUqr6HhtYHaV4pfxWRgWlOtoj87FM6lLKWtdwDUkjC+fXJVNiRSLsLxVoS7xffLVSWZRYR6/lbix4LijyOElYmZP/Yzbd6L4jyQsNETB5PvMcnRJ5WefcWrNiGPBxGGHR2rwbvAEyG8LJANK16cNAOKLGV4vs490kLeXbphH2TYHOpcDiM1JXvkcFcVkkhDz2JFMNNUU86f8aM+kwZIt6voWTaQw=="><summary>ヒント2 🔒</summary><div class="hint2-body"><p class="muted">時間になったら、講師がMeetのチャットで合言葉をお知らせします。</p><div class="row"><input type="text" placeholder="合言葉" aria-label="問題1のヒント2の合言葉" autocomplete="off"><button type="button">開く</button></div><div class="result" aria-live="polite"></div></div></details>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -34,8 +34,8 @@
     <p>あなたは一般社員としてログインしています。本来は自分のプロフィールしか見られないはずです。他人のプロフィールを表示させることができれば、「メモ」欄に社外秘のフラグが書かれています。</p>
     <p><a href="q2.html?id=101" target="_blank" rel="noopener">問題2を開く →</a></p>
     <details><summary>ヒント1</summary><p>ブラウザのアドレスバー（URL）をよく見てみましょう。</p></details>
-    <details><summary>ヒント2</summary><p>URLの <code>id=</code> の後ろの数字を、自分のID（101）以外に変えるとどうなりますか？ 他人のデータが見えてしまったら、それが問題の穴です。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題2のフラグ"><button type="button">確認</button></div>
+    <details class="hint2-locked" data-q="q2" data-hint2="PCLliRUPIjnv5kX0uM74ew==.luiBPdrU0jvIc9X5.EJwF47s+xMmlU0utvg6H6fPTlKMtWhIQmhet4/100siPjTRtYviWfOf1eFf91VY/64HgMKTFCpydC0XxQC8p3RLKtAsw4bG1UyCmENeUjobAVYG1zh3neRO9yr7dcFZTvwwM+YpXjCkk8OirsNf2JmRAH9Dn7YEjhSiycNPotC95dllMppqxR3Cb3auMA9E7CnEGdEM+wvVsu3xn3M8qAAjM9qgp80UQJAH48zXnHSo/2O7ZrdU0Xr9RMCa/K+KTud80lwoqyF5CNhaxvpg+9ZU/KbVrhJY="><summary>ヒント2 🔒</summary><div class="hint2-body"><p class="muted">時間になったら、講師がMeetのチャットで合言葉をお知らせします。</p><div class="row"><input type="text" placeholder="合言葉" aria-label="問題2のヒント2の合言葉" autocomplete="off"><button type="button">開く</button></div><div class="result" aria-live="polite"></div></div></details>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題2のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -44,8 +44,8 @@
     <p>グッズの購入画面です。定価は ¥1,000 ですが、定価より安い金額で注文を確定させてください。</p>
     <p><a href="q3.html" target="_blank" rel="noopener">問題3を開く →</a></p>
     <details><summary>ヒント1</summary><p>画面に見えない項目も、ブラウザには送信データとして入っています。開発者ツール（F12）の「Elements」でフォームを調べてみましょう。</p></details>
-    <details><summary>ヒント2</summary><p><code>type="hidden"</code> の入力項目があります。その値はダブルクリックで書き換えられます。書き換えてから「購入する」を押してみましょう。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題3のフラグ"><button type="button">確認</button></div>
+    <details class="hint2-locked" data-q="q3" data-hint2="N6LNxZc1aJ0YkK3YsLEAWQ==.7XPjWVTWOrqDfVTa.08n1hFqlbE6wqKTzrcNxgN8REnUe2OtAUs+UndAFoNAyAI65rdYHBhACL40NLqKN8Hkz/Wejp+pzKV5EJfHCa5WBpsGsPxGTlPStyjE0/g+ozPq4PYSvXjSWhUnPckf12Hq3kiE/T2Kf4nzDE4mM6foB3w+BahoYyQ+zxVpq/tNdZMXhlmwgJbgj5E17ymo537l6QeCvKiNQQh5FrpM2qcFlAJdd/k4A/fEDREmLgpSIokwSySBbUuSOlUM/iDFqe2g80RuPvcgWjYbVCnX6sz52uINGH/c="><summary>ヒント2 🔒</summary><div class="hint2-body"><p class="muted">時間になったら、講師がMeetのチャットで合言葉をお知らせします。</p><div class="row"><input type="text" placeholder="合言葉" aria-label="問題3のヒント2の合言葉" autocomplete="off"><button type="button">開く</button></div><div class="result" aria-live="polite"></div></div></details>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題3のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -55,7 +55,7 @@
     <p><a href="q4.html" target="_blank" rel="noopener">問題4を開く →</a></p>
     <details><summary>ヒント1</summary><p>ページのソース（右クリック →「ページのソースを表示」）を読んでみましょう。ログインの判定は、どこで行われていますか？</p></details>
     <details><summary>ヒント2</summary><p>パスワードの確認がブラウザ側のJavaScriptだけで行われています。<code>atob(...)</code> は Base64 をデコードする関数で、開発者ツールのコンソールでそのまま実行できます。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題4のフラグ"><button type="button">確認</button></div>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題4のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -65,7 +65,7 @@
     <p><a href="q5.html" target="_blank" rel="noopener">問題5を開く →</a></p>
     <details><summary>ヒント1</summary><p>「現在のロール」は、どこに保存されているのでしょうか？ 開発者ツール（F12）の「Application」→「Cookies」を見てみましょう。</p></details>
     <details><summary>ヒント2</summary><p>Cookieの <code>role</code> の値は、ブラウザ上で自分で書き換えられます。書き換えたあと、ページを再読み込みしてみましょう。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題5のフラグ"><button type="button">確認</button></div>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題5のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -75,7 +75,7 @@
     <p><a href="q6.html" target="_blank" rel="noopener">問題6を開く →</a></p>
     <details><summary>ヒント1</summary><p>まずは guest / guest でログインして、画面に出る「実行されたSQL」を見てみましょう。入力した文字は、SQL文のどこに入っていますか？ ID に <code>'</code>（シングルクォート）を1つだけ入れるとどうなるでしょうか。</p></details>
     <details><summary>ヒント2</summary><p>入力に <code>'</code> を入れると、文字列を途中で終わらせて、その後ろに自分でSQLを書き足せます。SQLでは <code>--</code> から後ろはコメント（無視される部分）です。たとえば ID に <code>admin' --</code> と入れると、SQL文はどうなりますか？</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題6のフラグ"><button type="button">確認</button></div>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題6のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -85,7 +85,7 @@
     <p><a href="q7.html" target="_blank" rel="noopener">問題7を開く →</a></p>
     <details><summary>ヒント1</summary><p>ページのソースを見ると、別のファイル（設定ファイル）を読み込んでいます。ソース表示の画面では、そのファイル名をクリックして中身を開けます。</p></details>
     <details><summary>ヒント2</summary><p>設定ファイルのコメントに、「退避してある」古いファイルの名前が書かれています。アドレスバーのURLのファイル名をそれに書き換えて開いてみましょう。Webサーバーに置いたファイルは、リンクがなくてもURLさえ分かれば誰でも読めてしまいます。</p></details>
-    <div class="row"><input type="text" placeholder="FLAG{...}" aria-label="問題7のフラグ"><button type="button">確認</button></div>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題7のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
   </div>
 
@@ -112,8 +112,9 @@ async function sha256(text) {
 
 document.querySelectorAll(".card[data-q]").forEach(card => {
   const q = card.dataset.q;
-  const input = card.querySelector("input");
-  const result = card.querySelector(".result");
+  const row = card.querySelector(".flag-row");
+  const input = row.querySelector("input");
+  const result = row.nextElementSibling;
   const check = async () => {
     const value = input.value.trim();
     if (!value) return;
@@ -127,8 +128,53 @@ document.querySelectorAll(".card[data-q]").forEach(card => {
     }
     document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜7はボーナスです）";
   };
-  card.querySelector("button").addEventListener("click", check);
+  row.querySelector("button").addEventListener("click", check);
   input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+});
+
+// ---- ヒント2：講師がMeetのチャットで伝える合言葉で開く ----
+// ヒント2の本文は、合言葉から作った鍵で暗号化して埋め込んでいます（合言葉なしでは読めません）。
+// 一度開いたヒントは、このブラウザに合言葉を覚えておき、再読み込みしても開いたままにします。
+const HINT_ITERATIONS = 150000;
+const normalizePass = s => s.normalize("NFKC").trim().toLowerCase();
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+async function decryptHint(blob, pass) {
+  const [salt, iv, ct] = blob.split(".").map(fromB64);
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(normalizePass(pass)), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: HINT_ITERATIONS, hash: "SHA-256" },
+    base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+  return new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct));
+}
+
+document.querySelectorAll("details.hint2-locked").forEach(box => {
+  const q = box.dataset.q;
+  const body = box.querySelector(".hint2-body");
+  const input = body.querySelector("input");
+  const result = body.querySelector(".result");
+  const storeKey = "ctf-hint2-" + q;
+
+  const unlock = async (pass, fromStorage) => {
+    if (!pass.trim()) return;
+    try {
+      const hintHtml = await decryptHint(box.dataset.hint2, pass);
+      body.innerHTML = hintHtml;  // 自分たちで用意したヒント本文（参加者の入力ではない）
+      box.querySelector("summary").textContent = "ヒント2 🔓";
+      box.open = true;
+      try { localStorage.setItem(storeKey, pass); } catch (e) { /* 保存できなくても表示はする */ }
+    } catch (e) {
+      if (fromStorage) { try { localStorage.removeItem(storeKey); } catch (e2) {} return; }
+      result.textContent = "合言葉が違うようです。";
+      result.className = "result ng";
+    }
+  };
+
+  body.querySelector("button").addEventListener("click", () => unlock(input.value, false));
+  input.addEventListener("keydown", e => { if (e.key === "Enter") unlock(input.value, false); });
+  try {
+    const saved = localStorage.getItem(storeKey);
+    if (saved) unlock(saved, true);
+  } catch (e) { /* 読めない環境では、毎回合言葉を入れる */ }
 });
 </script>
 </body>

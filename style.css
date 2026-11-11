@@ -88,3 +88,5 @@ pre { background: var(--bg); border: 1px solid var(--border); border-radius: 8px
 .comments li { padding: 10px 0; border-bottom: 1px solid var(--border); }
 .comments li strong { font-size: 0.9rem; }
 button.secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.hint2-locked summary { color: var(--muted); }
+.hint2-body { padding: 4px 0 0; }
