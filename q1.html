@@ -10,13 +10,18 @@
 <body>
 <main>
   <div class="topbar">練習用ページ（問題1）</div>
+  <div class="card">
+    <h2>🎯 お題</h2>
+    <p>このブログを見た人を、別のページ（<code>prize.html</code>）に飛ばしてみよう。飛ばすことに成功すると、飛んだ先でFLAGが手に入ります。</p>
+  </div>
+
   <h1>社内ブログ</h1>
 
   <article class="card">
-    <p class="muted">2026年11月　情報システム部 佐藤</p>
-    <h2>パスワード、使い回していませんか？</h2>
-    <p>社内のアカウントと、プライベートのサービスで同じパスワードを使っていると、どこか1つから漏れたときに、まとめて乗っ取られてしまいます。</p>
-    <p>パスワード管理ツールを使って、サービスごとに違うパスワードを設定しましょう。感想や、おすすめのツールがあれば、コメント欄で教えてください。</p>
+    <p class="muted">2026年11月　総務部 高橋</p>
+    <h2>年末の大掃除のお知らせ</h2>
+    <p>今年も年末の大掃除の季節がやってきました。12月の最終営業日の午後は、各フロアで一斉に大掃除を行います。</p>
+    <p>不要な書類はシュレッダーへ、私物は持ち帰りをお願いします。片付けのコツがあれば、コメント欄で教えてください。</p>
   </article>
 
   <section class="card">
@@ -31,24 +36,27 @@
         <button type="button" id="reset" class="secondary">コメントをリセット</button>
       </div>
     </form>
-    <p class="muted">※ コメントは、このブラウザの中だけに保存されます（他の参加者には見えません）。表示がおかしくなったら「コメントをリセット」を押してください。</p>
+    <p class="muted">※ コメントは、このブラウザの中だけに保存されます（他の参加者には見えません）。表示がおかしくなったら「コメントをリセット」を押してください。別のページに飛ばされて戻れなくなったときは、トップページの「問題1のコメントをリセット」ボタンを使ってください。</p>
   </section>
 
   <p class="back"><a href="index.html">← トップに戻る</a></p>
 </main>
 
 <script>
-// ログイン中のユーザーのCookie（セッション情報という想定）にフラグを入れておく
-const dir = location.pathname.replace(/[^/]*$/, "");
-document.cookie = "flag=" + atob("RkxBR3t4c3NfaXNfbm90X2p1c3RfYWxlcnR9") + "; path=" + dir + "; SameSite=Lax";
-
 // サーバーの代わりに、このブラウザの localStorage にコメントを保存する
-const KEY = "ctf-q1-comments";
+const KEY = "q1_comments";
 const INITIAL = [
-  { name: "鈴木 美咲", body: "パスワード管理ツール、先月から使い始めました。もっと早く使えばよかったです。" },
-  { name: "佐藤 次郎", body: "同じパスワードを使い回していたので、今日中に変えます…！" },
-  { name: "田中 花子", body: "社内でおすすめのツールがあれば知りたいです。" }
+  { name: "山本 健太", body: "毎年、引き出しの奥から懐かしい資料が出てきます（笑）" },
+  { name: "田中 花子", body: "「1年使わなかった物は捨てる」と決めると早いですよ。" },
+  { name: "佐藤 次郎", body: "シュレッダーが混むので、早めにやっておきます！" }
 ];
+
+// q1.html?reset=1 で開いたときは、コメントを表示する前に初期状態に戻す
+// （リダイレクトするコメントを投稿すると、このページを開くたびに飛ばされてしまうため）
+if (new URLSearchParams(location.search).get("reset") === "1") {
+  try { localStorage.removeItem(KEY); } catch (e) { /* 何もしない */ }
+  history.replaceState(null, "", location.pathname);
+}
 
 function load() {
   try {
@@ -62,11 +70,7 @@ function save(list) {
 }
 let comments = load();
 
-// 「<script さえ消せば安全」という、よくある不十分な対策
-function sanitize(text) {
-  return text.replace(/<script/gi, "");
-}
-
+// 対策なし：コメント本文を、HTMLとしてそのまま表示する（scriptタグも動く）
 function render() {
   const ul = document.getElementById("comments");
   ul.replaceChildren();
@@ -75,8 +79,8 @@ function render() {
     const who = document.createElement("strong");
     who.textContent = c.name || "名無し";
     const body = document.createElement("div");
-    // コメント本文を、HTMLとしてそのまま埋め込んでいる（脆弱）
-    body.innerHTML = sanitize(c.body);
+    // 本文をHTMLとして埋め込む（脆弱）。createContextualFragment は、中の scriptタグも実行する
+    body.append(document.createRange().createContextualFragment(c.body));
     li.append(who, body);
     ul.append(li);
   }

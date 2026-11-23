@@ -33,11 +33,24 @@
     </form>
     <p class="muted">※ コメントは、このブラウザの中だけに保存されます。表示がおかしくなったら「コメントをリセット」を押してください。</p>
   </section>
+
+  <div class="card">
+    <h2>🚩 FLAGが出たら</h2>
+    <p>ポップアップに出た <code>FLAG{...}</code> をコピーして、トップページのデモの入力欄に貼ってみよう。「正解です」と出れば成功です。</p>
+    <p><a href="index.html">← トップページに戻る</a></p>
+  </div>
 </main>
 
 <script>
 // デモ用：対策なし。コメント本文を、HTMLとしてそのまま表示する（scriptタグも動く）
-// ※ Cookieの設定や、外部への送信処理はありません
+// ※ 外部への送信処理はありません
+
+// ログイン中のユーザーのCookie（セッション情報という想定）に、デモ用の練習フラグを入れておく
+// （このページだけで読めるCookieにして、問題のページのフラグがデモに出ないようにしている）
+const dir = location.pathname.replace(/[^/]*$/, "");
+document.cookie = "flag=; path=" + dir + "; max-age=0";  // 以前の版の問題1が残したCookieを消す
+document.cookie = "flag=" + atob("RkxBR3t0aGlzX2lzX2RlbW9feHNzfQ==") + "; path=" + location.pathname + "; SameSite=Lax";
+
 const KEY = "ctf-demo-comments";
 const INITIAL = [
   { name: "佐藤 次郎", body: "参加します！" },
