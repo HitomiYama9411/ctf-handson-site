@@ -34,15 +34,14 @@
 
   <div class="card" id="result" aria-live="polite"></div>
 
-  <div class="card">
-    <h2>🧐 ふりかえり</h2>
-    <p>あなたは社内ブログを見に行っただけなのに、このページに飛ばされました。本物の攻撃では、このように<strong>偽の当選ページやログイン画面に誘導</strong>して、カード番号やパスワードを入力させようとします。</p>
-    <p class="row"><button type="button" id="reset">問題1のコメントをリセットしてブログに戻る</button></p>
-    <p class="back"><a href="index.html">← トップに戻る</a></p>
-  </div>
+  <div class="row"><button type="button" id="reset">問題1のコメントをリセットしてブログに戻る</button></div>
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
 </main>
 
 <script>
+// 問題1ではCookieにFLAGを入れない。以前の版の問題1が残したCookieがあれば消しておく
+document.cookie = "flag=; path=" + location.pathname.replace(/[^/]*$/, "") + "; max-age=0";
+
 // 問題1（q1.html）から飛ばされて来たときだけ、FLAGを表示する
 // （静的ページなので、document.referrer で確認する程度の簡単な判定です）
 let fromQ1 = false;
