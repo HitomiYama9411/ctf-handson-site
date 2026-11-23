@@ -19,14 +19,26 @@
     <p class="muted">⚠️ このサイトの問題は練習用です。実在のサービスに同じことを試すのは絶対にやめましょう。</p>
   </div>
 
+  <div class="card" data-q="demo">
+    <h2>デモ：XSSでFLAGを出してみよう（講師が操作します） <span class="badge">デモ</span></h2>
+    <p>講師が画面共有で操作して見せます（見ているだけでOKです）。コメント欄に <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code> と書き込むと、Cookieに入っている練習用のFLAGが表示されます。出てきたFLAGを、下の入力欄に貼って確認するところまでが流れです。</p>
+    <p><a href="demo.html" target="_blank" rel="noopener">デモを開く →</a></p>
+    <p class="muted">※ デモのFLAGは練習用なので、正解数には数えません。</p>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="デモのフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
   <div class="card" data-q="q1">
-    <h2>問題1：社内ブログのコメント欄 <span class="badge">入門 / XSS</span></h2>
-    <p>社内ブログの記事に、コメントを書き込めます。書いたコメントは、記事を見た人全員の画面に表示されます。JavaScriptを実行して、このサイトのCookieに隠されたフラグを取り出してください。</p>
+    <h2>問題1：ブログを見た人を別ページへ飛ばせ <span class="badge">入門 / XSS</span></h2>
+    <p>デモと同じく、社内ブログのコメント欄に書いた内容が、そのままHTMLとして表示されます。コメントを使って、このブログを見た人を別のページ（<code>prize.html</code>）に飛ばしてください。飛ばすことに成功すると、飛んだ先でFLAGが手に入ります。</p>
     <p><a href="q1.html" target="_blank" rel="noopener">問題1を開く →</a></p>
-    <details><summary>ヒント1</summary><p>コメントの文字は、HTMLとしてそのまま表示されているかもしれません。<code>&lt;b&gt;こんにちは&lt;/b&gt;</code> とコメントするとどうなりますか？</p></details>
-    <details class="hint2-locked" data-q="q1" data-hint2="qMLpy1SYqz5zrXk7yuyeMQ==.6I70qxekWJ6ffSoe.76Ib+HX/KE4+Tck3JEVT8OUtPtAlEfBo1gfk7ckBrdftRi3sFkjRih0SbrBEU6UD2j6dzPFINIDxHpJyEGOYR8ZqwYDy7C/x8M1YLXvIjqzpJYCk9W1pWdpgxe4zTkwPkEUUNnKdNPmapW0mnzVhjTeOE9FZWiYx54kSjMon2lVWT/pAbLl9xDM7Crwt7/Pt5tJKsMEN/hHHdcTVY3g6VLBN5p6kE67lL9sashu6gWpfkbinGvqJ4iOoariROKnxKnKh97JlbdwAjFKGIlEeOiFh4mUNq4NKcqxx486+dmYfIAPw578VJ/mNYOh9N/zaopyp5x9VIpaWcjRvMAoYQLmxyzYXH8JVhoqsrmD9UW63WA0jjV5gOuhPhbOcEJd0S1hFvH3wvvq5yHhCiA=="><summary>ヒント2 🔒</summary><div class="hint2-body"><p class="muted">時間になったら、講師がMeetのチャットで合言葉をお知らせします。</p><div class="row"><input type="text" placeholder="合言葉" aria-label="問題1のヒント2の合言葉" autocomplete="off"><button type="button">開く</button></div><div class="result" aria-live="polite"></div></div></details>
+    <details><summary>ヒント1</summary><p>デモと同じく、コメントに書いた <code>&lt;script&gt;</code> が動きます。</p></details>
+    <details><summary>ヒント2</summary><p>ページを移動させるJavaScriptは <code>location.href = '移動先'</code> です。</p></details>
     <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題1のフラグ"><button type="button">確認</button></div>
     <div class="result" aria-live="polite"></div>
+    <div class="row"><button type="button" class="secondary" id="reset-q1">問題1のコメントをリセット</button></div>
+    <div class="result" id="reset-q1-msg" aria-live="polite"></div>
+    <p class="muted">※ 問題1のページを開くたびに別のページへ飛ばされて戻れなくなったときは、このボタンを押してから、もう一度問題1を開いてください。</p>
   </div>
 
   <div class="card" data-q="q2">
@@ -89,20 +101,33 @@
     <div class="result" aria-live="polite"></div>
   </div>
 
+  <div class="card" data-q="q8">
+    <h2>問題8：対策をすり抜けろ <span class="badge">ボーナス / XSS応用</span></h2>
+    <p>問題1と同じような社内ブログのコメント欄ですが、こちらには「<code>&lt;script</code> を消す」という対策が入っています。対策をすり抜けてJavaScriptを実行し、このサイトのCookieに隠されたフラグを取り出してください。</p>
+    <p><a href="q8.html" target="_blank" rel="noopener">問題8を開く →</a></p>
+    <details><summary>ヒント1</summary><p><code>&lt;b&gt;こんにちは&lt;/b&gt;</code> を投稿すると太字になります。入力がHTMLとして解釈されています。</p></details>
+    <details><summary>ヒント2</summary><p><code>&lt;script</code> は対策されています。ほかのHTMLの書き方で、JavaScriptを実行できます。Cookieは <code>document.cookie</code> で読めます。</p></details>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題8のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
   <p class="muted" id="score" aria-live="polite"></p>
 </main>
 
 <script>
 // フラグのSHA-256ハッシュ（答えそのものはここに書いていません）
 const HASHES = {
-  q1: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1",
+  q1: "e56bf170c331c2c10cea3d05086ae5572de0488e1ce54318a9ef6710de979972",
   q2: "4f68c20f3bf5aa5abec0d32d25b619ff41ea1a18fd244e82161d80823bf4a0c4",
   q3: "a25055f9118e65baf4ce43bc5c16e321013c6e10157f5fd07858ee1d9f1cf411",
   q4: "cb4aacacb4c4425d191102f54ab099ae815f8ea97229284aa31548eb40bf92a2",
   q5: "8100dc72014c74192560a6a80b3734c17d6a9fcbdfe3a47134e9db5082680f2f",
   q6: "704861c099c2d3eb92d60e5a956286bfa74d0f9bb892439f541e4e0abcc93b83",
-  q7: "296c0e98abc1559d18c495df46f1ddfdf1f7df73185b8f9fa891355a2763d603"
+  q7: "296c0e98abc1559d18c495df46f1ddfdf1f7df73185b8f9fa891355a2763d603",
+  q8: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1"
 };
+// デモの練習用フラグ（正解数には数えない）
+const DEMO_HASH = "e05d7d8d932c744a989521802697e9332980cd76142ff87f418832286014282a";
 const solved = new Set();
 
 async function sha256(text) {
@@ -118,18 +143,27 @@ document.querySelectorAll(".card[data-q]").forEach(card => {
   const check = async () => {
     const value = input.value.trim();
     if (!value) return;
-    if (await sha256(value) === HASHES[q]) {
-      result.textContent = "✅ 正解です！";
+    const isDemo = q === "demo";
+    if (await sha256(value) === (isDemo ? DEMO_HASH : HASHES[q])) {
+      result.textContent = isDemo ? "✅ 正解です！（デモなので、正解数には数えません）" : "✅ 正解です！";
       result.className = "result ok";
-      solved.add(q);
+      if (!isDemo) solved.add(q);
     } else {
       result.textContent = "❌ 違うようです。もう少し探してみましょう。";
       result.className = "result ng";
     }
-    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜7はボーナスです）";
+    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜8はボーナスです）";
   };
   row.querySelector("button").addEventListener("click", check);
   input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+});
+
+// ---- 問題1：コメントのリセット（別ページに飛ばされて戻れなくなったとき用） ----
+document.getElementById("reset-q1").addEventListener("click", () => {
+  try { localStorage.removeItem("q1_comments"); } catch (e) { /* 何もしない */ }
+  const msg = document.getElementById("reset-q1-msg");
+  msg.textContent = "問題1のコメントを初期状態に戻しました。";
+  msg.className = "result ok";
 });
 
 // ---- ヒント2：講師がMeetのチャットで伝える合言葉で開く ----

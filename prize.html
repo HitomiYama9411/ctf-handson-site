@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>🎉 当選のお知らせ</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .prize { text-align: center; border: 3px dashed #e0a800; background: #fff8db; color: #5a4300; }
+  .prize h1 { font-size: 1.8rem; color: #c0392b; }
+  .prize .big { font-size: 2.6rem; font-weight: 800; color: #c0392b; margin: 4px 0 12px; }
+  .prize .fake { display: inline-block; background: #e0a800; color: #fff; border-radius: 999px; padding: 10px 28px; font-weight: 700; }
+  .prize .small { font-size: 0.75rem; color: #8a7a3d; }
+  @media (prefers-color-scheme: dark) {
+    .prize { background: #2b2410; color: #f2e2a6; }
+    .prize .small { color: #b8a86e; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題1の飛ばし先）</div>
+
+  <div class="card prize">
+    <p>🎊🎊🎊 おめでとうございます 🎊🎊🎊</p>
+    <h1>あなたが当選しました！</h1>
+    <p>本日アクセスされた方の中から、<strong>あなた</strong>が選ばれました。</p>
+    <p class="big">ギフト券 10万円分</p>
+    <p><span class="fake">今すぐ受け取る ▶</span></p>
+    <p class="small">※ 受け取りには、カード番号の入力が必要です（あと 4:59 で締め切り）<br>
+    ※ これは練習用の架空のページです。このボタンは押しても何も起きません。</p>
+  </div>
+
+  <div class="card" id="result" aria-live="polite"></div>
+
+  <div class="card">
+    <h2>🧐 ふりかえり</h2>
+    <p>あなたは社内ブログを見に行っただけなのに、このページに飛ばされました。本物の攻撃では、このように<strong>偽の当選ページやログイン画面に誘導</strong>して、カード番号やパスワードを入力させようとします。</p>
+    <p class="row"><button type="button" id="reset">問題1のコメントをリセットしてブログに戻る</button></p>
+    <p class="back"><a href="index.html">← トップに戻る</a></p>
+  </div>
+</main>
+
+<script>
+// 問題1（q1.html）から飛ばされて来たときだけ、FLAGを表示する
+// （静的ページなので、document.referrer で確認する程度の簡単な判定です）
+let fromQ1 = false;
+try {
+  const ref = new URL(document.referrer);
+  fromQ1 = ref.origin === location.origin && /\/q1(\.html)?$/.test(ref.pathname);
+} catch (e) { /* referrer がない（直接開いた）とき */ }
+
+const box = document.getElementById("result");
+if (fromQ1) {
+  const h = document.createElement("h2");
+  h.textContent = "🚩 飛ばすことに成功しました！";
+  const p = document.createElement("p");
+  p.textContent = "FLAGをコピーして、トップページの問題1の入力欄に貼り付けてください。";
+  const flag = document.createElement("pre");
+  flag.textContent = atob("RkxBR3t4c3NfY2FuX3JlZGlyZWN0X3lvdX0=");
+  box.append(h, p, flag);
+} else {
+  const h = document.createElement("h2");
+  h.textContent = "🔒 FLAGはまだ表示されません";
+  const p = document.createElement("p");
+  p.textContent = "このページを直接開いても、FLAGは手に入りません。ブログのコメントを使って、ここに飛ばしてみよう。";
+  const link = document.createElement("a");
+  link.href = "q1.html";
+  link.textContent = "問題1（社内ブログ）を開く →";
+  box.append(h, p, link);
+}
+
+document.getElementById("reset").addEventListener("click", () => {
+  try { localStorage.removeItem("q1_comments"); } catch (e) { /* 何もしない */ }
+  location.href = "q1.html";
+});
+</script>
+</body>
+</html>
