@@ -43,6 +43,9 @@
 </main>
 
 <script>
+// 問題1ではCookieにFLAGを入れない。以前の版の問題1が残したCookieがあれば消しておく
+document.cookie = "flag=; path=" + location.pathname.replace(/[^/]*$/, "") + "; max-age=0";
+
 // サーバーの代わりに、このブラウザの localStorage にコメントを保存する
 const KEY = "q1_comments";
 const INITIAL = [
