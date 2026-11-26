@@ -32,6 +32,7 @@
       <div class="row">
         <button type="submit">購入する</button>
       </div>
+      <div class="result ng" id="err" aria-live="polite"></div>
     </form>
   </div>
 
@@ -63,11 +64,14 @@ document.getElementById("order").addEventListener("submit", e => {
   const quantity = Number(raw);
   const msg = document.getElementById("msg");
   const done = document.getElementById("done");
-  done.hidden = false;
+  const err = document.getElementById("err");
   if (raw === "" || !Number.isInteger(quantity)) {
-    msg.textContent = "数量を整数で入力してください。";
+    err.textContent = "数量を整数で入力してください。";
+    done.hidden = true;
     return;
   }
+  err.textContent = "";
+  done.hidden = false;
   const total = UNIT_PRICE * quantity;
   let text = "注文が確定しました（数量：" + quantity + "個、合計：" + yen(total) + "）。";
   if (total <= 0) {
