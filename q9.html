@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>社内ショップ 購入画面</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <div class="topbar">練習用ページ（問題9・ボーナス）</div>
+  <div class="card">
+    <h2>🎯 お題</h2>
+    <p>数量の入力欄は1〜5個に制限されています。合計金額を0円以下にして、注文を確定してみよう。</p>
+  </div>
+
+  <h1>社内ショップ</h1>
+  <p class="muted">社員向けのグッズ販売サイトです。</p>
+
+  <div class="card" id="shop">
+    <h2>社内ノベルティ マグカップ</h2>
+    <p>単価：<strong>¥1,500</strong></p>
+    <form id="order">
+      <input type="hidden" name="item" value="mug">
+      <div class="row">
+        <label for="quantity">数量</label>
+        <input type="number" name="quantity" id="quantity" min="1" max="5" value="1" style="max-width: 6em">
+        <span class="muted">（1〜5個まで）</span>
+      </div>
+      <p style="margin-top: 12px">合計金額：<strong id="total">¥1,500</strong></p>
+      <div class="row">
+        <button type="submit">購入する</button>
+      </div>
+      <div class="result ng" id="err" aria-live="polite"></div>
+    </form>
+  </div>
+
+  <div class="card" id="done" hidden>
+    <h2>ご注文ありがとうございます</h2>
+    <p id="msg"></p>
+  </div>
+
+  <p class="back"><a href="index.html">← トップに戻る</a></p>
+</main>
+
+<script>
+const UNIT_PRICE = 1500;
+const yen = n => (n < 0 ? "-¥" : "¥") + Math.abs(n).toLocaleString("ja-JP");
+const qtyInput = document.getElementById("quantity");
+
+// 画面上の合計金額の表示（見た目だけ）
+qtyInput.addEventListener("input", () => {
+  const q = Number(qtyInput.value);
+  document.getElementById("total").textContent = qtyInput.value !== "" && Number.isInteger(q) ? yen(UNIT_PRICE * q) : "—";
+});
+
+// 本来サーバー側で行うべき注文処理を、ここでは画面上で再現している。
+// 数量の範囲（1〜5個）は画面の入力欄（min / max 属性）でしか確認しておらず、
+// ここでは送られてきた数量をそのまま信用して、単価 × 数量 で請求している（脆弱）
+document.getElementById("order").addEventListener("submit", e => {
+  e.preventDefault();
+  const raw = new FormData(e.target).get("quantity");
+  const quantity = Number(raw);
+  const msg = document.getElementById("msg");
+  const done = document.getElementById("done");
+  const err = document.getElementById("err");
+  if (raw === "" || !Number.isInteger(quantity)) {
+    err.textContent = "数量を整数で入力してください。";
+    done.hidden = true;
+    return;
+  }
+  err.textContent = "";
+  done.hidden = false;
+  const total = UNIT_PRICE * quantity;
+  let text = "注文が確定しました（数量：" + quantity + "個、合計：" + yen(total) + "）。";
+  if (total <= 0) {
+    text += " 【システム通知】合計金額が0円以下の注文が確定しました：" + atob("RkxBR3t2YWxpZGF0ZV9vbl90aGVfc2VydmVyfQ==");
+  }
+  msg.textContent = text;
+});
+</script>
+</body>
+</html>
