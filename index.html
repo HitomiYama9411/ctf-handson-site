@@ -111,6 +111,16 @@
     <div class="result" aria-live="polite"></div>
   </div>
 
+  <div class="card" data-q="q9">
+    <h2>問題9：社内ショップ：マイナスの数量で注文せよ <span class="badge">ボーナス / 入力値の検証</span></h2>
+    <p>社内ショップでマグカップを買えます。数量の入力欄は1〜5個に制限されていますが……。合計金額を0円以下にして注文を確定させ、フラグを手に入れてください。</p>
+    <p><a href="q9.html" target="_blank" rel="noopener">問題9を開く →</a></p>
+    <details><summary>ヒント1</summary><p>数量の入力欄の制限は、開発者ツール（F12）の「Elements」で見られます。</p></details>
+    <details><summary>ヒント2</summary><p><code>&lt;input&gt;</code> の <code>min</code> 属性を消すと、マイナスの数も入力できます。</p></details>
+    <div class="row flag-row"><input type="text" placeholder="FLAG{...}" aria-label="問題9のフラグ"><button type="button">確認</button></div>
+    <div class="result" aria-live="polite"></div>
+  </div>
+
   <p class="muted" id="score" aria-live="polite"></p>
 </main>
 
@@ -124,7 +134,8 @@ const HASHES = {
   q5: "8100dc72014c74192560a6a80b3734c17d6a9fcbdfe3a47134e9db5082680f2f",
   q6: "704861c099c2d3eb92d60e5a956286bfa74d0f9bb892439f541e4e0abcc93b83",
   q7: "296c0e98abc1559d18c495df46f1ddfdf1f7df73185b8f9fa891355a2763d603",
-  q8: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1"
+  q8: "989458d26c2653d7b86d0289a339e1fc984cbf2ce73290f299287fc858fa68b1",
+  q9: "814270b17b07ce1bd48754fdb79e976bec4ef5c3b4944d4b2c6e992422e209ee"
 };
 // デモの練習用フラグ（正解数には数えない）
 const DEMO_HASH = "e05d7d8d932c744a989521802697e9332980cd76142ff87f418832286014282a";
@@ -152,7 +163,7 @@ document.querySelectorAll(".card[data-q]").forEach(card => {
       result.textContent = "❌ 違うようです。もう少し探してみましょう。";
       result.className = "result ng";
     }
-    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜8はボーナスです）";
+    document.getElementById("score").textContent = "正解数：" + solved.size + " / " + Object.keys(HASHES).length + "（問題4〜9はボーナスです）";
   };
   row.querySelector("button").addEventListener("click", check);
   input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
